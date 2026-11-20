@@ -34,3 +34,11 @@ if (
 
 mkdirSync(OUTPUT_DIR, { recursive: true });
 copyFileSync(source, target);
+
+// The copy must be byte for byte the file in the repository: read both back
+// and compare, so a truncated or altered copy fails loudly here instead of
+// handing the gate a different address than the one in the commit.
+if (!readFileSync(target).equals(readFileSync(source))) {
+  console.error('The copied VIDEO.json differs from the one in the repository.');
+  process.exit(1);
+}
